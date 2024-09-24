@@ -13,6 +13,10 @@ function pintarGraella($graella){
     for ($i=1;$i<8;$i++){
         $table .= "<tr>";
         for ($j=1;$j<9;$j++){
+            "<th>$j</th>";
+        }
+        $table .= "</tr><tr>";
+        for ($j=1;$j<9;$j++){
             $table .= match ($graella[$i][$j]){
                 0 => '<td class="buid"></td>',
                 1 => '<td class="player1"></td>',

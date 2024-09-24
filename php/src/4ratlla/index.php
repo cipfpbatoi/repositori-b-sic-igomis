@@ -13,5 +13,6 @@ ferMoviment($graella,2,2);
 </head>
 <body>
     <?= pintarGraella($graella); ?>
+    <form
 </body>
 </html> 
