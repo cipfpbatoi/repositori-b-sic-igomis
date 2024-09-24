@@ -1,7 +1,9 @@
 <?php 
+ 
+
 function inicialitzarGraella(&$graella){
-    for ($i=1;$i<8;$i++){
-        for ($j=1;$j<9;$j++){
+    for ($i=1;$i<= FILES ;$i++){
+        for ($j=1;$j<= COLUMNES ;$j++){
             $graella[$i][$j] = 0;
         }
     }
@@ -10,13 +12,10 @@ function inicialitzarGraella(&$graella){
 
 function pintarGraella($graella){
     $table = "<table>";
-    for ($i=1;$i<8;$i++){
+    
+    for ($i=1;$i<= FILES ;$i++){
         $table .= "<tr>";
-        for ($j=1;$j<9;$j++){
-            "<th>$j</th>";
-        }
-        $table .= "</tr><tr>";
-        for ($j=1;$j<9;$j++){
+        for ($j=1;$j<= COLUMNES ;$j++){
             $table .= match ($graella[$i][$j]){
                 0 => '<td class="buid"></td>',
                 1 => '<td class="player1"></td>',
@@ -25,13 +24,18 @@ function pintarGraella($graella){
         }
         $table .=  "</tr>";
     }
+    $table .= "<tr>";
+    for ($j=1;$j<= COLUMNES;$j++){
+        $table .= "<td>$j</td>";
+    }
+    $table .= "</tr>";
     $table .= "</table>";
     return $table;
 }
 
 function ferMoviment(&$graella, $columna, $jugadorActual){
     $fil_buida = 0;
-    for ($i = 1; $fil_buida === 0 || $i < 8 ; $i++){
+    for ($i = 1; $fil_buida === 0 || $i <= FILES ; $i++){
         if ($graella[$i][$columna] === 0){
             $fil_buida = $i;
         }

@@ -6,20 +6,30 @@ function check_letter($word,$letter,&$guessed){
             foreach ($found as $position){
                 $guessed[$position] = $letter;
             }
-            return true;
+            return 0;
         }
-        echo   "La Lletra $letter no forma part de la paraula";
-        return false;    
+        echo "<span class='incorrect'>La Lletra $letter no forma part de la paraula</span>";
+        return 1;    
     }
-    echo "La lletra $letter ja ha estat introduïda amb anterioritat";
-    return false;    
+    echo "<span class='incorrect'>La lletra $letter ja ha estat introduïda amb anterioritat</span>";
+    return 1;    
     
 }
 
-function print_tauler($guessed){
-    echo '<p>';
+function print_tauler($guessed,$letters,$fails){
+    $tauler = '<p>';
     for ($i = 0 ; $i < count($guessed) ; $i++){
-        echo ' '.$guessed[$i];
+        $tauler .= ' '.$guessed[$i];
     }
-    echo "<p/>";
+    foreach ($letters as $letter){
+        if (in_array($letter,$guessed)){
+            $tauler .= " <em class='correct'>$letter</em>";
+        } else {
+            $tauler .= " <em class='incorrect'>$letter</em>";
+        }
+
+    }
+    $tauler .= " $fails Errades";
+    $tauler .= "<p/>";
+    return $tauler;
 }
