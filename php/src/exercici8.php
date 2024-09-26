@@ -1,6 +1,6 @@
 <?php
 // Arrays de valors per a "Mòdul" i "Estat"
-$modules = ["Matemàtiques", "Història", "Ciències", "Literatura"];
+$modules = ["mat" => "Matemàtiques","his" => "Història","cie" => "Ciències", "lit"=>"Literatura"];
 $statuses = ["Disponible", "No disponible", "Pròximament"];
 
 // Inicialitzar variables per emmagatzemar els valors introduïts
@@ -39,8 +39,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div>
         <label for="module">Mòdul:</label>
         <select id="module" name="module">
-            <?php foreach ($modules as $mod): ?>
-                <option value="<?php echo $mod; ?>"><?php echo $mod; ?></option>
+            <?php foreach ($modules as $key => $mod): ?>
+                <option value="<?php echo $key; ?>"><?php echo $mod; ?></option>
             <?php endforeach; ?>
         </select>
     </div>
@@ -95,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <th>Comentaris</th>
         </tr>
         <tr>
-            <td><?php echo $module; ?></td>
+            <td><?php echo $modules[$module]; ?></td>
             <td><?php echo $publisher; ?></td>
             <td><?php echo $price; ?></td>
             <td><?php echo $pages; ?></td>

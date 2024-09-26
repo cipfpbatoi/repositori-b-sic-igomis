@@ -1,5 +1,6 @@
 <?php
 session_start();
+session_start();
 if (!isset($_SESSION['user'])) {
     header('Location: /index.php');
     exit();
@@ -7,26 +8,15 @@ if (!isset($_SESSION['user'])) {
  echo " <p>Welcome,   {$_SESSION['user']}  !</p>";
 
 include_once "functions.php";
-function inicialitza(){
-    $paraula = "fcbarcelona";
-    $word = str_split($paraula);
-    $guessed = array();
-    $numberLetters = count($word);
-    for ($i = 0 ; $i < $numberLetters ; $i++){
-        $guessed[] = "_";
-    }
-    $_SESSION['paraula'] = $paraula;
-    $_SESSION['guessed'] = $guessed;
-    $_SESSION['letters'] = array() ;
-    $_SESSION['fails'] = 0;
+
+$paraula = "fcbarcelona";
+$word = str_split($paraula);
+$guessed = array();
+for ($i = 0 ; $i < count($word) ; $i++){
+    $guessed[] = "_";
 }
-
-
-if (!isset($_SESSION['guessed'])) {
-    inicialitza();
-}
-extract($_SESSION);
-
+$letters = array();
+$fails = 0;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $word = str_split($_SESSION['paraula']);

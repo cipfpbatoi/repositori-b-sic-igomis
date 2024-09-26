@@ -22,10 +22,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $targetDir = "uploads/";
         // Agafar el nom del fitxer
         $fileName = basename($_FILES["photo"]["name"]);
+        $fileType = pathinfo($fileName, PATHINFO_EXTENSION);
+        $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+
+        $newFileName = substr(str_shuffle($permitted_chars), 0, 10).".$fileType";
         // Definir la ruta completa per guardar la imatge
-        $targetFilePath = $targetDir . $fileName;
+        $targetFilePath = $targetDir . $newFileName;
         // Comprovar el tipus de fitxer
-        $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
         
         // Permetre només imatges (formats png, jpg, jpeg, gif)
         $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
