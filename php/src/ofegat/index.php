@@ -1,44 +1,34 @@
 <?php
-include_once "functions.php";
+// Llista d'usuaris predefinits amb contrasenyes en text pla
+$users = [
+    'igomis@cipfpbatoi.es' => '1234',
+    'admin@cipfpbatoi.es' => '4321',
+];
 
-$paraula = "fcbarcelona";
-$word = str_split($paraula);
-$guessed = array();
-for ($i = 0 ; $i < count($word) ; $i++){
-    $guessed[] = "_";
+// Convertir les contrasenyes a un format encriptat
+foreach ($users as $email => $password) {
+    $users[$email] = password_hash($password, PASSWORD_BCRYPT);
 }
-$letters = array();
-$fails = 0;
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $letter = strtolower(substr($_POST['letter'],0,1));
-    if (!in_array($letter, $letters)){
-        $letters[] = $letter;
-        $fails += check_letter($word,$letter,$guessed);
+// Formulari d'autenticació
+if (isset($_POST['login'])) {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    if (isset($users[$email]) && password_verify($password, $users[$email])) {
+        // L'usuari està autenticat
+        session_start();
+        $_SESSION['user'] = $email;
+        header('Location: /ofegat/ofegat.php');
     } else {
-        $fails++;
+        // Credencials incorrectes
+        echo "Invalid email or password.";
     }
 }
-
-
-
-
-
 ?>
-
-<html>
-<head>
-    <link rel="stylesheet" href="ofegat.css?v=<?php echo time(); ?>">
-</head>
-<body>
-<?= print_tauler($guessed,$letters,$fails); ?>    
-<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-    <label for="letter">Lletra:</label>
-    <input type="text" id="letter" name="letter" required><br><br>
-    <input type="submit" value="Enviar">
+<h1>Joc de l'ofegat</h1>
+<form method="post">
+    Email: <input type="email" name="email" required>
+    Password: <input type="password" name="password" required>
+    <button type="submit" name="login">Login</button>
 </form>
-</body>
-</html>
-
-
-
