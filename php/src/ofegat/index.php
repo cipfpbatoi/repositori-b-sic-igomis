@@ -1,34 +1,66 @@
 <?php
-// Llista d'usuaris predefinits amb contrasenyes en text pla
-$users = [
-    'igomis@cipfpbatoi.es' => '1234',
-    'admin@cipfpbatoi.es' => '4321',
-];
-
-// Convertir les contrasenyes a un format encriptat
-foreach ($users as $email => $password) {
-    $users[$email] = password_hash($password, PASSWORD_BCRYPT);
+session_start();
+if (!isset($_SESSION['user'])) {
+    header('Location: /index.php');
+    exit();
 }
+ echo " <p>Welcome,   {$_SESSION['user']}  !</p>";
 
-// Formulari d'autenticació
-if (isset($_POST['login'])) {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-
-    if (isset($users[$email]) && password_verify($password, $users[$email])) {
-        // L'usuari està autenticat
-        session_start();
-        $_SESSION['user'] = $email;
-        header('Location: /ofegat/ofegat.php');
-    } else {
-        // Credencials incorrectes
-        echo "Invalid email or password.";
+include_once "functions.php";
+function inicialitza(){
+    $paraula = "fcbarcelona";
+    $word = str_split($paraula);
+    $guessed = array();
+    $numberLetters = count($word);
+    for ($i = 0 ; $i < $numberLetters ; $i++){
+        $guessed[] = "_";
     }
+    $_SESSION['paraula'] = $paraula;
+    $_SESSION['guessed'] = $guessed;
+    $_SESSION['letters'] = array() ;
+    $_SESSION['fails'] = 0;
 }
+
+
+if (!isset($_SESSION['guessed'])) {
+    inicialitza();
+}
+extract($_SESSION);
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $word = str_split($_SESSION['paraula']);
+    $letter = strtolower(substr($_POST['letter'],0,1));
+    if (!in_array($letter, $letters)){
+        $letters[] = $letter;
+        $fails += check_letter($word,$letter,$guessed);
+    } else {
+        $fails++;
+    }
+    $_SESSION['letters'] = $letters;
+    $_SESSION['fails'] = $fails;
+    $_SESSION['guessed'] = $guessed;
+}
+
+
+
+
+
 ?>
-<h1>Joc de l'ofegat</h1>
-<form method="post">
-    Email: <input type="email" name="email" required>
-    Password: <input type="password" name="password" required>
-    <button type="submit" name="login">Login</button>
+
+<html>
+<head>
+    <link rel="stylesheet" href="ofegat.css?v=<?php echo time(); ?>">
+</head>
+<body>
+<?= print_tauler($guessed,$letters,$fails); ?>    
+<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+    <label for="letter">Lletra:</label>
+    <input type="text" id="letter" name="letter" required><br><br>
+    <input type="submit" value="Enviar">
 </form>
+</body>
+</html>
+
+
+
