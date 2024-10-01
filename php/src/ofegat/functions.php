@@ -33,3 +33,23 @@ function print_tauler($guessed,$letters,$fails){
     $tauler .= "<p/>";
     return $tauler;
 }
+
+function inicialitza(){
+    $paraula = "fcbarcelona";
+    $word = str_split($paraula);
+    $guessed = array();
+    $numberLetters = count($word);
+    for ($i = 0 ; $i < $numberLetters ; $i++){
+        $guessed[] = "_";
+    }
+    $_SESSION['paraula'] = $paraula;
+    $_SESSION['guessed'] = $guessed;
+    $_SESSION['letters'] = array() ;
+    $_SESSION['fails'] = 0;
+}
+
+function fi_joc($guessed) {
+    if (!in_array("_",$guessed)){
+        return true;
+    }
+}
