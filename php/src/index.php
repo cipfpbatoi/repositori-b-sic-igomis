@@ -3,6 +3,7 @@ session_start();
 
 // Logout  (si s'ha passat el paràmetre logout=yes)
 if (isset($_GET['logout']) && $_GET['logout'] == 'yes') {
+    var_dump('holA');
     session_destroy();  // Destruir la sessió
     header('Location: /index.php');  // Redirigir a la pàgina d'inici després del logout
     exit();
