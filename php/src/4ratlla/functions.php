@@ -78,11 +78,11 @@ function fi_joc($graella,$coord){
 }
 
 
-function calculate_square($i,$x,$y,$coordAfegeix,$graella,$jugador,&$punts){
-    $zx = $i*$coordAfegeix[0] + $x;
-    $zy = $i*$coordAfegeix[1] + $y;
-    $antx = ($i-1)*$coordAfegeix[0] + $x;
-    $anty = ($i-1)*$coordAfegeix[1] + $y;
+function calculate_square($increment,$x,$y,$coordAfegeix,$graella,$jugador,&$punts){
+    $zx = $increment*$coordAfegeix[0] + $x;
+    $zy = $increment*$coordAfegeix[1] + $y;
+    $antx = ($increment-1)*$coordAfegeix[0] + $x;
+    $anty = ($increment-1)*$coordAfegeix[1] + $y;
     if ($zx > 0 && $zx <= FILES && $zy > 0 && $zy <= COLUMNES){
         if ($graella[$zx][$zy] === $jugador ) {
             $punts[$zx][$zy] = $punts[$antx][$anty] + 1;
