@@ -7,6 +7,7 @@ const TWIN = array(array([-1,-1],[1,1]),array([-1,0],[1,0]),array([-1,1],[1,-1])
 
 include_once "functions.php";
 
+
 if (!isset($_SESSION['user'])) {
     header('Location: /index.php');
     exit();

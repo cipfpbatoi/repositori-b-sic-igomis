@@ -65,34 +65,54 @@ function fi_joc($graella,$coord){
     
     for ($i=1;$i<=4;$i++){
         foreach (ADJ as $coordAfegeix){
-            $zx = $i*$coordAfegeix[0] + $x;
-            $zy = $i*$coordAfegeix[1] + $y;
-            $antx = ($i-1)*$coordAfegeix[0] + $x;
-            $anty = ($i-1)*$coordAfegeix[1] + $y;
-            if ($zx > 0 && $zx <= FILES && $zy > 0 && $zy <= COLUMNES){
-                if ($graella[$zx][$zy] === $jugador ) {
-                    $punts[$zx][$zy] = $punts[$antx][$anty] + 1;
-                    if ($punts[$zx][$zy] == 4 ){ 
-                        return true;}
-                }    
+            if (calculate_square($i,$x,$y,$coordAfegeix,$graella,$jugador,$punts)){
+                return true;
             }
-            if ($i == 1){
-                foreach (TWIN as $twins){ 
-                    $tx1  = $twins[0][0] + $x;
-                    $ty1  = $twins[0][1] + $y;
-                    $tx2  = $twins[1][0] + $x;
-                    $ty2  = $twins[1][1] + $y;
-                    
-                    if ($tx1 > 0 && $tx1 <= FILES && $ty1 > 0 && $ty1 <= COLUMNES &&
-                        $tx2 > 0 && $tx2 <= FILES && $ty2 > 0 && $ty2 <= COLUMNES && 
-                        $punts[$tx1][$ty1] == $punts[$tx2][$ty2] &&  $punts[$tx2][$ty2] == 2){
-                        $punts[$tx1][$ty1] = $punts[$tx2][$ty2] = 3;
-                    }
-                }
+            if ($i === 1) {
+                checkTwins($x,$y,$punts);
+            }
+
+        }
+    }
+    return false;
+}
+
+
+function calculate_square($i,$x,$y,$coordAfegeix,$graella,$jugador,&$punts){
+    $zx = $i*$coordAfegeix[0] + $x;
+    $zy = $i*$coordAfegeix[1] + $y;
+    $antx = ($i-1)*$coordAfegeix[0] + $x;
+    $anty = ($i-1)*$coordAfegeix[1] + $y;
+    if ($zx > 0 && $zx <= FILES && $zy > 0 && $zy <= COLUMNES){
+        if ($graella[$zx][$zy] === $jugador ) {
+            $punts[$zx][$zy] = $punts[$antx][$anty] + 1;
+            if ($punts[$zx][$zy] == 4 ){
+                return true;
             }
         }
     }
     return false;
 }
+
+/**
+ *
+ * @param mixed $x
+ * @param mixed $y
+ * @param array $punts
+ *
+ */
+function checkTwins( int  $x, int $y, array &$punts)
+{
+    foreach (TWIN as $twins) {
+        $tx1 = $twins[0][0] + $x;
+        $ty1 = $twins[0][1] + $y;
+        $tx2 = $twins[1][0] + $x;
+        $ty2 = $twins[1][1] + $y;
+
+        if ($tx1 > 0 && $tx1 <= FILES && $ty1 > 0 && $ty1 <= COLUMNES && $tx2 > 0 && $tx2 <= FILES && $ty2 > 0 && $ty2 <= COLUMNES && $punts[$tx1][$ty1] == $punts[$tx2][$ty2] && $punts[$tx2][$ty2] == 2) {
+            $punts[$tx1][$ty1] = $punts[$tx2][$ty2] = 3;
+        }
+    }
+ }
 
  
