@@ -29,13 +29,39 @@ if ($_SERVER["REQUEST_METHOD"] === "POST"){
     extract($_POST);
     if ($columna>=1 && $columna <= COLUMNES){
         $last = ferMoviment($graella,$columna,$jugador_actual);
-        $fi = fi_joc($graella, $last);
-        $_SESSION['graella'] = $graella;
-        $_SESSION['jugador_actual'] = $jugador_actual == 1?2:1;
+        
+        if ($last) {
+            if (fi_joc($graella, $last)) {
+                echo "Jugador $jugador_actual  win !!";
+            }   
+            if (tauler_ple($graella)) {
+                echo "Ja no es pot jugar més"; 
+            } 
+    
+            $jugador_actual = 1?2:1;
+    
+            $last = jugar($graella,$jugador_actual);
+           
+    
+            if (fi_joc($graella, $last)) {
+                echo "Jugador $jugador_actual  win !!";
+            }   
+            if (tauler_ple($graella)) {
+                echo "Ja no es pot jugar més"; 
+            } 
+    
+            $_SESSION['graella'] = $graella;
+            $_SESSION['jugador_actual'] = $jugador_actual == 1?2:1;
+
+        } else {
+            echo "Moviment no vàlid";
+
+        }
+        
+        
+        
     }
-    if ($fi) {
-        echo "Jugador $jugador_actual  win !!";
-    }    
+    
 }
 ?>
 <html>
@@ -43,6 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST"){
     <link rel="stylesheet" href="4ratlla.css?v=<?php echo time(); ?>">
 </head>
 <body>
+    <?= $_COOKIE['jugador1']??'' ?> 
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
     <?= pintarGraella($graella); ?>
     <input type="submit" name="reset" value="Reiniciar joc">

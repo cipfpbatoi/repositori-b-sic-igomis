@@ -34,14 +34,15 @@ function pintarGraella($graella){
 }
 
 function ferMoviment(array &$graella,int $columna,int $jugadorActual){
-    $fil_buida = 0;
-    for ($i = 1; $fil_buida === 0 || $i <= FILES ; $i++){
-        if ($graella[$i][$columna] === 0){
-            $fil_buida = $i;
+    if ($columna > 0 && $columna <= COLUMNES){
+        $fil_buida = calc_fila_moviment($graella,$columna);
+        if ($fil_buida) {
+            $graella[$fil_buida][$columna] = $jugadorActual;
+            return array($fil_buida,$columna);
         }
+        return false;
     }
-    $graella[$fil_buida][$columna] = $jugadorActual;
-    return array($fil_buida,$columna);
+    return false;
 }
 
 function inicialitza(){
@@ -50,6 +51,15 @@ function inicialitza(){
     inicialitzarGraella($graella);
     $_SESSION['graella'] = $graella;
     
+}
+
+function tauler_ple($graella){
+    foreach ($_SESSION['graella'] as $fila) {
+        if (in_array(0, $fila)) {
+            return false; // Encara hi ha espai
+        }
+    }
+    return true; // Tauler ple
 }
 
 
@@ -113,6 +123,67 @@ function checkTwins( int  $x, int $y, array &$punts)
             $punts[$tx1][$ty1] = $punts[$tx2][$ty2] = 3;
         }
     }
+ }
+
+ function jugar(&$graella,$jugadorActual){
+   
+        $opponent = $jugadorActual === 1 ? 2 : 1;
+    
+        // Comprovar si pots guanyar
+        for ($col = 1; $col <= COLUMNES; $col++) {
+            if (isValidMove($graella, $col)) {
+                $tempBoard = $graella;
+                $coord = ferMoviment($tempBoard, $col, $jugadorActual);
+                
+                if (fi_joc($tempBoard, $coord)) {
+                    return ferMoviment($graella,$col,$jugadorActual); // Guanyar immediatament
+                }
+            }
+        }
+    
+        // Comprovar si l'oponent pot guanyar i bloquejar
+        for ($col = 1; $col <= COLUMNES; $col++) {
+            if (isValidMove($graella, $col)) {
+                $tempBoard = $graella;
+                $coord = ferMoviment($tempBoard, $col, $opponent);
+                if (fi_joc($tempBoard, $coord )) {
+                    return ferMoviment($graella,$col,$jugadorActual); // Bloquejar
+                }
+            }
+        }
+    
+        // Estratègia: buscar el millor moviment
+        // Podem afegir més lògica aquí per seleccionar el millor moviment
+        $possibles = array();
+        for ($col = 1; $col <= COLUMNES; $col++) {
+            if (isValidMove($graella, $col)) {
+                $possibles[] = $col; 
+            }
+        }
+        if (count($possibles)>2) {
+            $random = rand(-1,1);
+        }
+        $middle = (int) (count($possibles) / 2)+$random;
+        $inthemiddle = $possibles[$middle];
+        return ferMoviment($graella, $inthemiddle, $jugadorActual); 
+    
+        return -1; // Totes les columnes estan plenes
+    }
+ 
+
+ function isValidMove($board, $col) {
+    return $board[1][$col] === 0;
+}
+
+ function calc_fila_moviment($graella,$columna){
+    $fil_buida = null;
+    for ($i = 1; $fil_buida === 0 || $i <= FILES ; $i++){
+        if ($graella[$i][$columna] === 0){
+            $fil_buida = $i;
+        }
+    }
+    return $fil_buida;
+
  }
 
  
